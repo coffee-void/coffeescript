@@ -204,6 +204,8 @@ grammar =
   FuncGlyph: [
     o '->',                                     -> 'func'
     o '=>',                                     -> 'boundfunc'
+    o '->=',                                    -> 'returnfunc'
+    o '=>=',                                    -> 'returnboundfunc'
   ]
 
   # An optional, trailing comma.

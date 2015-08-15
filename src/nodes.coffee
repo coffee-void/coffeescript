@@ -1363,7 +1363,8 @@ exports.Code = class Code extends Base
   constructor: (params, body, tag) ->
     @params      = params or []
     @body        = body or new Block
-    @bound       = tag is 'boundfunc'
+    @bound       = tag is 'boundfunc' or tag is 'returnboundfunc'
+    @noReturn    = tag is 'func' or tag is 'boundfunc'
     @isGenerator = !!@body.contains (node) ->
       node instanceof Op and node.operator in ['yield', 'yield*']
 
