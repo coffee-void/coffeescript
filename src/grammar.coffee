@@ -83,10 +83,13 @@ grammar =
     o 'Body TERMINATOR'
   ]
 
-  # Block and statements, which make up a line in a body.
+  # Block and statements, which make up a line in a body. YieldReturn is a
+  # statement, but not included in Statement because that results in an ambigous
+  # grammar.
   Line: [
     o 'Expression'
     o 'Statement'
+    o 'YieldReturn'
   ]
 
   # Pure statements which cannot be expressions.
@@ -113,6 +116,13 @@ grammar =
     o 'Switch'
     o 'Class'
     o 'Throw'
+    o 'Yield'
+  ]
+
+  Yield: [
+    o 'YIELD',                                  -> new Op $1, new Value new Literal ''
+    o 'YIELD Expression',                       -> new Op $1, $2
+    o 'YIELD FROM Expression',                  -> new Op $1.concat($2), $3
   ]
 
   # An indented block of expressions. Note that the [Rewriter](rewriter.html)
@@ -168,22 +178,38 @@ grammar =
   # the ordinary **Assign** is that these allow numbers and strings as keys.
   AssignObj: [
     o 'ObjAssignable',                          -> new Value $1
-    o 'ObjAssignable : Expression',             -> new Assign LOC(1)(new Value($1)), $3, 'object'
+    o 'ObjAssignable : Expression',             -> new Assign LOC(1)(new Value $1), $3, 'object',
+                                                              operatorToken: LOC(2)(new Literal $2)
     o 'ObjAssignable :
-       INDENT Expression OUTDENT',              -> new Assign LOC(1)(new Value($1)), $4, 'object'
+       INDENT Expression OUTDENT',              -> new Assign LOC(1)(new Value $1), $4, 'object',
+                                                              operatorToken: LOC(2)(new Literal $2)
+    o 'SimpleObjAssignable = Expression',       -> new Assign LOC(1)(new Value $1), $3, null,
+                                                              operatorToken: LOC(2)(new Literal $2)
+    o 'SimpleObjAssignable =
+       INDENT Expression OUTDENT',              -> new Assign LOC(1)(new Value $1), $4, null,
+                                                              operatorToken: LOC(2)(new Literal $2)
     o 'Comment'
   ]
 
-  ObjAssignable: [
+  SimpleObjAssignable: [
     o 'Identifier'
-    o 'AlphaNumeric'
     o 'ThisProperty'
+  ]
+
+  ObjAssignable: [
+    o 'SimpleObjAssignable'
+    o 'AlphaNumeric'
   ]
 
   # A return statement from a function body.
   Return: [
     o 'RETURN Expression',                      -> new Return $2
     o 'RETURN',                                 -> new Return
+  ]
+
+  YieldReturn: [
+    o 'YIELD RETURN Expression',                -> new YieldReturn $3
+    o 'YIELD RETURN',                           -> new YieldReturn
   ]
 
   # A block comment.
@@ -549,9 +575,6 @@ grammar =
     o 'UNARY_MATH Expression',                  -> new Op $1 , $2
     o '-     Expression',                      (-> new Op '-', $2), prec: 'UNARY_MATH'
     o '+     Expression',                      (-> new Op '+', $2), prec: 'UNARY_MATH'
-    o 'YIELD Statement',                        -> new Op $1 , $2
-    o 'YIELD Expression',                       -> new Op $1 , $2
-    o 'YIELD FROM Expression',                  -> new Op $1.concat($2) , $3
 
     o '-- SimpleAssignable',                    -> new Op '--', $2
     o '++ SimpleAssignable',                    -> new Op '++', $2

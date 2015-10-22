@@ -8,7 +8,7 @@
     "compiler"
   ],
   "author": "Dmitry Maganov <vonagam@gmail.com>",
-  "version": "1.9.3",
+  "version": "1.10.0",
   "license": "MIT",
   "engines": {
     "node": ">=0.8.0"
@@ -17,10 +17,13 @@
     "lib": "./lib/coffee-script"
   },
   "main": "./lib/coffee-script/coffee-script",
-  "bugs": "https://github.com/vonagam/coffeescript/issues",
+  "bin": {
+    "coffee-void": "./bin/coffee"
+  },
+  "bugs": "https://github.com/coffee-void/coffeescript/issues",
   "repository": {
     "type": "git",
-    "url": "git://github.com/vonagam/coffeescript.git"
+    "url": "git://github.com/coffee-void/coffeescript.git"
   },
   "devDependencies": {
     "uglify-js": "~2.2",
