@@ -1,3 +1,17 @@
+# CoffeeScript-Void
+
+~~~coffee
+# the only difference from coffeescript is that there are
+# no more implicit returns
+
+x = -> 3 # var x = function () { 3; }
+x = ->= 3 # var x = function () { return 3; }
+x = -> return 3 # var x = function () { return 3; }
+
+# by adding '=' after '->' you keep original coffeescript behaviour
+# same rules apply to bound arrows (=>)
+~~~
+
             {
          }   }   {
         {   {  }  }
@@ -25,38 +39,25 @@ CoffeeScript is a little language that compiles into JavaScript.
 If you have the node package manager, npm, installed:
 
 ```shell
-npm install -g coffee-script
+npm install -g coffee-script-void
 ```
 
-Leave off the `-g` if you don't wish to install globally. If you don't wish to use npm:
-
-```shell
-git clone https://github.com/jashkenas/coffeescript.git
-sudo coffeescript/bin/cake install
-```
+Leave off the `-g` if you don't wish to install globally.
 
 ## Getting Started
 
 Execute a script:
 
 ```shell
-coffee /path/to/script.coffee
+coffee-void /path/to/script.coffee
 ```
 
 Compile a script:
 
 ```shell
-coffee -c /path/to/script.coffee
+coffee-void -c /path/to/script.coffee
 ```
 
-For documentation, usage, and examples, see: http://coffeescript.org/
+To suggest a feature or report a bug: http://github.com/coffee-void/coffeescript/issues
 
-To suggest a feature or report a bug: http://github.com/jashkenas/coffeescript/issues
-
-If you'd like to chat, drop by #coffeescript on Freenode IRC.
-
-The source repository: https://github.com/jashkenas/coffeescript.git
-
-Changelog: http://coffeescript.org/#changelog
-
-Our lovely and talented contributors are listed here: http://github.com/jashkenas/coffeescript/contributors
+The source repository: https://github.com/coffee-void/coffeescript.git
